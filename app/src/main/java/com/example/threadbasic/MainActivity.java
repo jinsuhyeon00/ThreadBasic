@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
+
     WorkerThread wt;
+    Thread wr;
     boolean running = true;
 
     String TAG = "THREAD";
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,9 +37,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         wt = new WorkerThread();
+        wr = new Thread(new Runnable()
+        {
+            public void run() {
+                int i = 0;
+                for (i = 0; i < 20 && running; i++) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                    }
+                    Log.v("THREAD", "Runnable time=" + i);
+                }
+            }
+        });
         running = true;
         wt.start();
+        wr.start();
         Log.v(TAG,"Now I am in onStart");
     }
 
